@@ -1,5 +1,6 @@
 import numpy as np
 from .utils import get_avg_uniq
+from ..multiprocessing import mp_pandas_obj
 
 
 def seq_bootstrap(ind_m, s_length=None):

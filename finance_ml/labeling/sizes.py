@@ -6,6 +6,31 @@ from scipy.stats import norm
 from ..multiprocessing import mp_pandas_obj
 from .utils import get_gaussian_betsize
 
+def get_sizes(close,events,sign_label):
+    '''
+
+    Parameters
+    ----------
+    events
+    close
+    sign_label
+
+    Returns
+    -------
+
+    '''
+
+    #1)prices aligned with events
+    events_=events.dropna(subset=['t1'])
+    px=events_.index.union(events_['t1'].values).drop_duplicates()
+    px=close.reindex(px,method='bfill')
+    #2)create out object
+    out=pd.DataFrame(index=events_.index)
+    out['ret']=px.loc[events_['t1'].values].values/px.loc[events_.index]-1
+    if 'side' in events_:out['ret']*=events_['side'] #meta-labeling
+    out['bin']=np.sign(out['ret'])
+    if 'side' in events_:out.loc[out['ret']<=0,'bin']=0 #meta-labeling
+    return out
 
 def discrete_signal(signal, step_size):
     """Discretize signal

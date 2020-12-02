@@ -154,7 +154,7 @@ def get_t1(close, timestamps, days=None, seconds=None):
         delta = pd.Timedelta(seconds=seconds)
     else:
         delta = pd.Timedelta(days=days)
-    t1 = close.index.searchsorted(timestamps + delta)
+    t1 = close.index.searchsorted(timestamps - delta)
     t1 = t1[t1 < close.shape[0]]
     t1 = pd.Series(close.index[t1], index=timestamps[:t1.shape[0]])
     return t1
